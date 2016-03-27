@@ -35,15 +35,14 @@ averages[which.max(averages$steps),]
 
 ## Inputing missing values
 
-There are many days/intervals where there are missing values (coded as `NA`). The presence of missing days may introduce bias into some calculations or summaries of the data.
+There are many days/intervals where there are missing values (coded as `NA`). 
 
 ```{r}
 missing <- is.na(data$steps)
 table(missing)
 ```
 
-All of the missing values are filled in with mean value for that 5-minute
-interval.
+All of the missing values are filled in with mean value for that 5-minute interval.
 
 ```{r}
 filldata <- function(steps, interval) {
@@ -57,7 +56,7 @@ filldata <- function(steps, interval) {
 filleddata <- data
 filleddata$steps <- mapply(filldata, filleddata$steps, filleddata$interval)
 ```
-Now, using the filled data set, let's make a histogram of the total number of steps taken each day and calculate the mean and median total number of steps.
+Using the filled data set, let's represent it on a histogram of the total number of steps taken each day and calculate the mean and median total number of steps.
 
 ```{r}
 totalsteps <- tapply(filleddata$steps, filleddata$date, FUN=sum)

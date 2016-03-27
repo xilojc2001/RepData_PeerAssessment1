@@ -61,9 +61,9 @@ averages[which.max(averages$steps), ]
 ```
 
 
-## Imputing missing values
+## Inputing missing values
 
-There are many days/intervals where there are missing values (coded as `NA`). The presence of missing days may introduce bias into some calculations or summaries of the data.
+There are many days/intervals where there are missing values (coded as `NA`). 
 
 
 ```r
@@ -95,7 +95,7 @@ filleddata <- data
 filleddata$steps <- mapply(filldata, filleddata$steps, filleddata$interval)
 ```
 
-Let's see it on a histogram.
+Using the filled data set, let's represent it on a histogram of the total number of steps taken each day and calculate the mean and median total number of steps.
 
 
 ```r
@@ -122,12 +122,10 @@ median(totalsteps)
 ```
 
 
-Mean and median values are higher after imputing missing data. The reason is
-that in the original data, there are some days with `steps` values `NA` for 
-any `interval`. The total number of steps taken in such days are set to 0s by
-default. However, after replacing missing `steps` values with the mean `steps`
-of associated `interval` value, these 0 values are removed from the histogram
-of total number of steps taken each day.
+We could identify that the mean and median values are higher after replace
+the missing data.After replacing missing `steps` values with the mean `steps`
+of associated `interval` value, the 0 value used by default on the `NA` was removed 
+from the histogram of total number of steps taken each day.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 First, let's find the day of the week for each measurement in the dataset. In
@@ -135,24 +133,26 @@ this part, we use the dataset with the filled-in values.
 
 
 ```r
-weekday.or.weekend <- function(date) {
-    day <- weekdays(date)
-    if (day %in% c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")) 
-        return("weekday") else if (day %in% c("Saturday", "Sunday")) 
-        return("weekend") else stop("invalid date")
+kindofweekday <- function(date) {
+        day <- weekdays(date)
+        if (day %in% c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday"))
+                return("weekday")
+        else if (day %in% c("Saturday", "Sunday"))
+                return("weekend")
+        else
+                stop("invalid date")
 }
-filled.data$date <- as.Date(filled.data$date)
-filled.data$day <- sapply(filled.data$date, FUN = weekday.or.weekend)
+filleddata$date <- as.Date(filleddata$date)
+filleddata$day <- sapply(filleddata$date, FUN=kindofweekday)
 ```
 
 
-Now, let's make a panel plot containing plots of average number of steps taken
-on weekdays and weekends.
+Create a plot to show the comparison between steps on weekdays and weekends
 
 ```r
-averages <- aggregate(steps ~ interval + day, data = filled.data, mean)
-ggplot(averages, aes(interval, steps)) + geom_line() + facet_grid(day ~ .) + 
-    xlab("5-minute interval") + ylab("Number of steps")
+averages <- aggregate(steps ~ interval + day, data=filleddata, mean)
+ggplot(averages, aes(interval, steps)) + geom_line() + facet_grid(day ~ .) +
+        xlab("5-minute interval") + ylab("Number of steps")
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
+![plot 04](figure/plot04.png) 
